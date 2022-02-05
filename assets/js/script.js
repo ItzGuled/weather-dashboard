@@ -1,4 +1,4 @@
-var searchBtn = document.querySelector(".btn-primary");
+var searchBtn = document.querySelector("#searchBtn");
 var searchInputEl = document.querySelector("#city-name");
 
 var theCity = function (city) {
@@ -32,9 +32,10 @@ function searchButton(event) {
   var city = searchInputEl.value.trim();
   if (city) {
     theCity(city);
+    console.log(city)
   }
 }
 
 var displayCity = function (data) {};
 
-searchBtn.addEventListener("submit", searchButton);
+searchBtn.addEventListener("click", searchButton);
