@@ -1,6 +1,7 @@
 var searchBtn = document.querySelector("#searchBtn");
 var searchInputEl = document.querySelector("#city-name");
 
+
 var theCity = function (city) {
   var apiUrl =
     `https://api.openweathermap.org/data/2.5/weather?q=` +
@@ -55,10 +56,10 @@ var display = function (data, cityName, iconUrl) {
   temp0.textContent = `Temp: ${data.current.temp} °F`;
 
   var wind0 = document.getElementById("wind0");
-  wind0.textContent = `wind: ${data.current.wind_speed} MPH`;
+  wind0.textContent = `Wind: ${data.current.wind_speed} MPH`;
 
   var humidity0 = document.getElementById("humidity0");
-  humidity0.textContent = `humidity: ${data.current.humidity}%`;
+  humidity0.textContent = `Humidity: ${data.current.humidity}%`;
 
   var uv0 = document.getElementById("uv0");
   uv0.textContent = `UV Index: ${data.current.uvi}`;
@@ -66,6 +67,11 @@ var display = function (data, cityName, iconUrl) {
   var icon0 = document.getElementById("icon0");
   icon0.src = iconUrl;
   console.log(icon0.src);
+
+  var today = new Date()
+  date.textContent = (today.getMonth()+1)+'/'+today.getDate()+'/'+today.getFullYear()
+
+  
 };
 
 var display5 = function (data, icon) {
@@ -74,18 +80,19 @@ var display5 = function (data, icon) {
     var wind = document.getElementById(`wind${i}`);
     var humidity = document.getElementById(`humidity${i}`);
     var icon = document.getElementById(`icon${i}`);
+    var dates = document.getElementById(`date${i}`);
     console.log(icon);
-
+    
     var iconDaily = `${data.daily[i].weather[0].icon}`;
     console.log(iconDaily);
     var iconUrl = "https://openweathermap.org/img/w/" + iconDaily + ".png";
 
     temp.textContent = `Temp: ${data.daily[i].temp.day} °F`;
-    wind.textContent = `wind: ${data.daily[i].wind_speed} MPH`;
-    humidity.textContent = `humidity: ${data.daily[i].humidity}%`;
+    wind.textContent = `Wind: ${data.daily[i].wind_speed} MPH`;
+    humidity.textContent = `Humidity: ${data.daily[i].humidity}%`;
     icon.src = iconUrl;
-
-    console.log(icon.src);
+    var today = new Date()
+    dates.textContent = (today.getMonth()+1)+'/'+today.getDate()+'/'+today.getFullYear()
   }
 };
 
