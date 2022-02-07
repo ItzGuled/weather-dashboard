@@ -75,6 +75,7 @@ var display = function (data, cityName, iconUrl) {
 };
 
 var display5 = function (data, icon) {
+  var today = new Date()
   for (let i = 1; i < 6; i++) {
     var temp = document.getElementById(`temp${i}`);
     var wind = document.getElementById(`wind${i}`);
@@ -91,8 +92,8 @@ var display5 = function (data, icon) {
     wind.textContent = `Wind: ${data.daily[i].wind_speed} MPH`;
     humidity.textContent = `Humidity: ${data.daily[i].humidity}%`;
     icon.src = iconUrl;
-    var today = new Date()
-    dates.textContent = (today.getMonth()+1)+'/'+today.getDate()+'/'+today.getFullYear()
+   
+    dates.textContent = (today.getMonth()+1)+'/'+ (today.getDate()+ + i)+'/'+today.getFullYear()
   }
 };
 
