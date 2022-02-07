@@ -93,7 +93,7 @@ var display5 = function (data, icon) {
     humidity.textContent = `Humidity: ${data.daily[i].humidity}%`;
     icon.src = iconUrl;
    
-    dates.textContent = (today.getMonth()+1)+'/'+ (today.getDate()+ + i)+'/'+today.getFullYear()
+    dates.textContent = (today.getMonth()+1)+'/'+ (today.getDate()+ i)+'/'+today.getFullYear()
   }
 };
 
