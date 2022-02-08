@@ -129,7 +129,7 @@ var generateCards = function (cityNames) {
   cards.append(div)
 }
 
-var savedCities = function () {
+var savedCities = function (cityArray) {
   for (let i = 0; i < cityArray.length; i++) {
     generateCards(cityArray[i])
 }
@@ -141,5 +141,5 @@ searchInputEl.textContent = event.target.textContent;
 searchButton()
 }
 loadCity();
-savedCities();
+savedCities(cityArray);
 searchBtn.addEventListener("click", searchButton);
