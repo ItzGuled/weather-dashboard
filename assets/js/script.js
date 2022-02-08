@@ -1,14 +1,16 @@
 var searchBtn = document.querySelector("#searchBtn");
 var searchInputEl = document.querySelector("#city-name");
-var cityArray = []
+var cityArray = localStorage.getItem("localArray")
+  ? JSON.parse(localStorage.getItem("localArray"))
+  : [];
 
 var theCity = function (city) {
   var apiUrl =
     `https://api.openweathermap.org/data/2.5/weather?q=` +
     city +
     `&appid=c1ecab3291362f3fe61c8735f3bd9de6`;
-  cityArray.push(city)
-localStorage.setItem("localArray", JSON.stringify(cityArray))
+  cityArray.push(city);
+  localStorage.setItem("localArray", JSON.stringify(cityArray));
 
   fetch(apiUrl).then(function (response) {
     if (response.ok) {
@@ -104,42 +106,27 @@ var display5 = function (data, icon) {
   }
 };
 
-
-var loadCity = function () {
- var c = localStorage.getItem("localArray")
- cityArray = JSON.parse(c)
- console.log(cityArray)
-}
-
-
-{/* <div class="card">
-<div id= "city" class="card-body">
-  <p>Denver</p>
-</div>
-</div>
-</div> */}
-
 var generateCards = function (cityNames) {
   var cards = document.querySelector("#city");
-  var div = document.createElement("button")
- 
+  var div = document.createElement("button");
+
   div.addEventListener("click", clickButton);
-  div.textContent = cityNames
-  div.classList = "btn-dark card-dark"
-  cards.append(div)
-}
+  div.textContent = cityNames;
+  div.classList = "btn-dark card-dark w-100 d-flex";
+  cards.append(div);
+  
+};
 
 var savedCities = function (cityArray) {
   for (let i = 0; i < cityArray.length; i++) {
-    generateCards(cityArray[i])
-}
-}
-
+    generateCards(cityArray[i]);
+  }
+};
 
 var clickButton = function (event) {
-searchInputEl.textContent = event.target.textContent;
-searchButton()
-}
-loadCity();
+  theCity(event.target.textContent);
+  
+};
+
 savedCities(cityArray);
 searchBtn.addEventListener("click", searchButton);
