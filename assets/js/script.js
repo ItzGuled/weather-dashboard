@@ -125,8 +125,7 @@ var savedCities = function (cityArray) {
 
 var clickButton = function (event) {
   theCity(event.target.textContent);
-  
-};
+  };
 
 savedCities(cityArray);
 searchBtn.addEventListener("click", searchButton);
