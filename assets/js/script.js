@@ -1,12 +1,14 @@
 var searchBtn = document.querySelector("#searchBtn");
 var searchInputEl = document.querySelector("#city-name");
-
+var cityArray = []
 
 var theCity = function (city) {
   var apiUrl =
     `https://api.openweathermap.org/data/2.5/weather?q=` +
     city +
     `&appid=c1ecab3291362f3fe61c8735f3bd9de6`;
+  cityArray.push(city)
+localStorage.setItem("localArray", JSON.stringify(cityArray))
 
   fetch(apiUrl).then(function (response) {
     if (response.ok) {
@@ -68,14 +70,13 @@ var display = function (data, cityName, iconUrl) {
   icon0.src = iconUrl;
   console.log(icon0.src);
 
-  var today = new Date()
-  date.textContent = (today.getMonth()+1)+'/'+today.getDate()+'/'+today.getFullYear()
-
-  
+  var today = new Date();
+  date.textContent =
+    today.getMonth() + 1 + "/" + today.getDate() + "/" + today.getFullYear();
 };
 
 var display5 = function (data, icon) {
-  var today = new Date()
+  var today = new Date();
   for (let i = 1; i < 6; i++) {
     var temp = document.getElementById(`temp${i}`);
     var wind = document.getElementById(`wind${i}`);
@@ -83,7 +84,7 @@ var display5 = function (data, icon) {
     var icon = document.getElementById(`icon${i}`);
     var dates = document.getElementById(`date${i}`);
     console.log(icon);
-    
+
     var iconDaily = `${data.daily[i].weather[0].icon}`;
     console.log(iconDaily);
     var iconUrl = "https://openweathermap.org/img/w/" + iconDaily + ".png";
@@ -92,9 +93,53 @@ var display5 = function (data, icon) {
     wind.textContent = `Wind: ${data.daily[i].wind_speed} MPH`;
     humidity.textContent = `Humidity: ${data.daily[i].humidity}%`;
     icon.src = iconUrl;
-   
-    dates.textContent = (today.getMonth()+1)+'/'+ (today.getDate()+ i)+'/'+today.getFullYear()
+
+    dates.textContent =
+      today.getMonth() +
+      1 +
+      "/" +
+      (today.getDate() + i) +
+      "/" +
+      today.getFullYear();
   }
 };
 
+
+var loadCity = function () {
+ var c = localStorage.getItem("localArray")
+ cityArray = JSON.parse(c)
+ console.log(cityArray)
+}
+
+
+{/* <div class="card">
+<div id= "city" class="card-body">
+  <p>Denver</p>
+</div>
+</div>
+</div> */}
+
+var generateCards = function (cityNames) {
+  var cards = document.querySelector("#city");
+  var div = document.createElement("button")
+ 
+  div.addEventListener("click", clickButton);
+  div.textContent = cityNames
+  div.classList = "btn-dark card-dark"
+  cards.append(div)
+}
+
+var savedCities = function () {
+  for (let i = 0; i < cityArray.length; i++) {
+    generateCards(cityArray[i])
+}
+}
+
+
+var clickButton = function (event) {
+searchInputEl.textContent = event.target.textContent;
+searchButton()
+}
+loadCity();
+savedCities();
 searchBtn.addEventListener("click", searchButton);
