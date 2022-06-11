@@ -2,7 +2,7 @@
 
 ## The Motivation
 
-This challenge was a catalyst in terms of honing my skills in API's. I got to learn how to pick data from JSON and append it to the screen. Overall, this has given me hindsight to the potential of what you can truly create.
+This challenge was a catalyst in terms of honing my skills in API's. I got to learn how to pick data from JSON and append it to the DOM. Overall, this has given me hindsight to the potential of what you can truly create.
 
 ## Challenges
 
