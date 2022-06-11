@@ -11,9 +11,9 @@ if (localStorage.getItem("key") && localStorage.getItem("key").length > 0) {
 
 var getUserCity = function (cityName) {
   var apiUrl =
-    `https://api.openweathermap.org/data/2.5/weather?q=` +
+  `https://api.openweathermap.org/data/2.5/weather?q=` +
     cityName +
-    `&appid=c1ecab3291362f3fe61c8735f3bd9de6`;
+    `&units=imperial&appid=4b9cf619ade932d30706497fcf318e67`;
 
   fetch(apiUrl)
     .then(function (response) {
@@ -44,7 +44,7 @@ var displayWeather = function (data) {
 };
 
 var oneCall = function (data) {
-  var apiUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${data.coord.lat}&lon=${data.coord.lon}&exclude={current,minutely,hourly,alerts}&units=imperial&appid=c1ecab3291362f3fe61c8735f3bd9de6`;
+  var apiUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${data.coord.lat}&lon=${data.coord.lon}&exclude={current,minutely,hourly,alerts}&units=imperial&appid=4b9cf619ade932d30706497fcf318e67`;
 
   fetch(apiUrl)
     .then(function (response) {
