@@ -1,131 +1,126 @@
-var searchBtn = document.querySelector("#searchBtn");
-var searchInputEl = document.querySelector("#city-name");
-var cityArray = localStorage.getItem("localArray")
-  ? JSON.parse(localStorage.getItem("localArray"))
-  : [];
+var searchInput = document.querySelector("#cityName");
+var searchBtn = document.querySelector(".btn-primary");
+var oldCities = document.querySelector("#list-card");
+var weather_icon = "http://openweathermap.org/img/w/";
 
-var theCity = function (city) {
-  var apiUrl =
-    `https://api.openweathermap.org/data/2.5/weather?q=` +
-    city +
-    `&appid=c1ecab3291362f3fe61c8735f3bd9de6`;
-  cityArray.push(city);
-  localStorage.setItem("localArray", JSON.stringify(cityArray));
-
-  fetch(apiUrl).then(function (response) {
-    if (response.ok) {
-      response.json().then(function (data) {
-        console.log("city", data);
-        console.log("icon", data.weather[0].icon);
-        var icon = data.weather[0].icon;
-        var iconUrl = "https://openweathermap.org/img/w/" + icon + ".png";
-
-        var lat = data["coord"]["lat"];
-        var lon = data["coord"]["lon"];
-        var cityName = data["name"];
-        console.log(lat, lon, cityName);
-        oneCall(lat, lon, cityName, iconUrl);
-      });
-    }
-  });
-};
-var oneCall = function (lat, lon, cityName, iconUrl) {
-  var apiUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude={current,minutely,hourly,alerts}&units=imperial&appid=c1ecab3291362f3fe61c8735f3bd9de6`;
-  fetch(apiUrl).then(function (response) {
-    if (response.ok) {
-      response.json().then(function (data) {
-        display(data, cityName, iconUrl);
-        display5(data);
-        console.log("data", data);
-      });
-    }
-  });
-};
-
-function searchButton(event) {
-  event.preventDefault();
-  var city = searchInputEl.value.trim();
-  if (city) {
-    theCity(city);
-    console.log(city);
-  }
+if (localStorage.getItem("key") && localStorage.getItem("key").length > 0) {
+  var valueArr = [...localStorage.getItem("key").split(",")];
+} else {
+  var valueArr = [];
 }
 
-var display = function (data, cityName, iconUrl) {
-  var currentCity = document.getElementById("date0");
-  console.log(cityName, currentCity);
-  currentCity.textContent = cityName;
+var getUserCity = function (cityName) {
+  var apiUrl =
+    `https://api.openweathermap.org/data/2.5/weather?q=` +
+    cityName +
+    `&appid=c1ecab3291362f3fe61c8735f3bd9de6`;
 
-  var temp0 = document.getElementById("temp0");
-  temp0.textContent = `Temp: ${data.current.temp} °F`;
-
-  var wind0 = document.getElementById("wind0");
-  wind0.textContent = `Wind: ${data.current.wind_speed} MPH`;
-
-  var humidity0 = document.getElementById("humidity0");
-  humidity0.textContent = `Humidity: ${data.current.humidity}%`;
-
-  var uv0 = document.getElementById("uv0");
-  uv0.textContent = `UV Index: ${data.current.uvi}`;
-
-  var icon0 = document.getElementById("icon0");
-  icon0.src = iconUrl;
-  console.log(icon0.src);
-
-  var today = new Date();
-  date.textContent =
-    today.getMonth() + 1 + "/" + today.getDate() + "/" + today.getFullYear();
+  fetch(apiUrl)
+    .then(function (response) {
+      if (response.ok) {
+        response.json().then(function (data) {
+          displayWeather(data);
+          oneCall(data);
+        });
+      }
+    })
+    .catch(function (error) {
+      alert("Unable to connect to GitHub");
+    });
 };
 
-var display5 = function (data, icon) {
-  var today = new Date();
-  for (let i = 1; i < 6; i++) {
-    var temp = document.getElementById(`temp${i}`);
-    var wind = document.getElementById(`wind${i}`);
-    var humidity = document.getElementById(`humidity${i}`);
-    var icon = document.getElementById(`icon${i}`);
-    var dates = document.getElementById(`date${i}`);
-    console.log(icon);
+var displayWeather = function (data) {
+  $(".current-weather")
+    .children("#city-date")
+    .html(`${data.name} (${moment().format("MM/DD/YYYY")})`);
+  $("#weather-icon").attr("src", `${weather_icon}${data.weather[0].icon}.png`);
+  $(".current-weather").children("#temp-dash").html(`Temp: ${data.main.temp}`);
+  $(".current-weather")
+    .children("#wind-dash")
+    .html(`Wind: ${data.wind.speed} MPH`);
+  $(".current-weather")
+    .children("#humidity-dash")
+    .html(`Humidity: ${data.main.humidity} %`);
+};
 
-    var iconDaily = `${data.daily[i].weather[0].icon}`;
-    console.log(iconDaily);
-    var iconUrl = "https://openweathermap.org/img/w/" + iconDaily + ".png";
+var oneCall = function (data) {
+  var apiUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${data.coord.lat}&lon=${data.coord.lon}&exclude={current,minutely,hourly,alerts}&units=imperial&appid=c1ecab3291362f3fe61c8735f3bd9de6`;
 
-    temp.textContent = `Temp: ${data.daily[i].temp.day} °F`;
-    wind.textContent = `Wind: ${data.daily[i].wind_speed} MPH`;
-    humidity.textContent = `Humidity: ${data.daily[i].humidity}%`;
-    icon.src = iconUrl;
+  fetch(apiUrl)
+    .then(function (response) {
+      if (response.ok) {
+        response.json().then(function (data) {
+          $("#uv-dash")
+            .html(`UV Index: ${data.current.uvi}`)
+            .addClass("btn-success");
+          for (let i = 1; i < data.daily.length - 2; i++) {
+            $("#date-0" + i).html(
+              "<h6>" + moment().add(i, "days").format("L") + "</h6>"
+            );
+            $("#icon-0" + i).attr(
+              "src",
+              `${weather_icon}${data.daily[i].weather[0].icon}.png`
+            );
+            $("#temp-0" + i).html(`Temp: ${data.daily[i].temp.day} °F`);
+            $("#wind-0" + i).html(`Wind: ${data.daily[i].wind_speed} MPH`);
+            $("#humidity-0" + i).html(`Humidity: ${data.daily[i].humidity} %`);
+          }
+          jsonData = data;
+        });
+      } else {
+        alert("Error: GitHub User Not Found");
+      }
+    })
+    .catch(function (error) {
+      alert("Unable to connect to GitHub");
+    });
+};
 
-    dates.textContent =
-      today.getMonth() +
-      1 +
-      "/" +
-      (today.getDate() + i) +
-      "/" +
-      today.getFullYear();
+var saveLocalStorage = function (city) {
+  valueArr.unshift(city);
+  localStorage.setItem(`key`, valueArr);
+};
+
+function formHandler() {
+  searchBtn.addEventListener("click", function (event) {
+    event.preventDefault();
+    var cityName = searchInput.value.trim();
+    if (cityName) {
+      $("#list-card").append(
+        `<button class="search-hist col-12 btn btn-secondary mb-2" data-city="${cityName}">${cityName}</button>`
+      );
+      getUserCity(cityName);
+      saveLocalStorage(cityName);
+      searchInput.value = "";
+    } else {
+      alert("Sorry, please enter a valid city name!");
+    }
+  });
+}
+
+oldCities.addEventListener("click", function (event) {
+  const city = event.target.textContent;
+  getUserCity(city);
+});
+
+oldCities.addEventListener("click", function (event) {
+  const city = event.target.textContent;
+  getUserCity(city);
+});
+
+var loadLocalStorage = function () {
+  var getValue = localStorage.getItem("key");
+  if (!getValue) {
+    return false;
   }
+  getValue = getValue.split(",");
+
+  getValue.forEach(function (item) {
+    $("#list-card").append(
+      `<button class="search-hist col-12 btn btn-secondary mb-2" data-language="${item}">${item}</button>`
+    );
+  });
 };
 
-var generateCards = function (cityNames) {
-  var cards = document.querySelector("#city");
-  var div = document.createElement("button");
-
-  div.addEventListener("click", clickButton);
-  div.textContent = cityNames;
-  div.classList = "btn-dark card-dark w-100 d-flex";
-  cards.append(div);
-  
-};
-
-var savedCities = function (cityArray) {
-  for (let i = 0; i < cityArray.length; i++) {
-    generateCards(cityArray[i]);
-  }
-};
-
-var clickButton = function (event) {
-  theCity(event.target.textContent);
-  };
-
-savedCities(cityArray);
-searchBtn.addEventListener("click", searchButton);
+loadLocalStorage();
+formHandler();

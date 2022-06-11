@@ -1,5 +1,5 @@
-/*css*/
-header h1 {
-    background-image:linear-gradient(to right,#ccd3d6,#00000d);
-    
+header {
+  background-image: linear-gradient(to right, #077bff, #212529);
 }
+
+
